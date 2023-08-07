@@ -178,7 +178,6 @@ def runcal(row,have_ele=1):
     # row['备注描述'] = context
     Role.find_activate_skill()
     if "镇魂曲" in row['防具三件套效果']:
-        print(row)
         row['damage'] =  zht( Role.find_activate_skill(), Role.zht_skill(), row['最终强度'])
     else : 
         row['damage'] =  mpt( Role.find_activate_skill(),  row['最终强度'])
@@ -191,7 +190,8 @@ def runcal(row,have_ele=1):
 #还要改很多，但是懒得
 df = loading_equip(predf)
 tdf = df.apply(runcal, axis=1)
-
+tdf = tdf.sort_values(by='damage', ascending=False)
+tdf.to_csv('排名结果')
     
     
     
