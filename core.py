@@ -191,7 +191,7 @@ def runcal(row,have_ele=1):
 df = loading_equip(predf)
 tdf = df.apply(runcal, axis=1)
 tdf = tdf.sort_values(by='damage', ascending=False)
-tdf.to_csv('排名结果')
+tdf.to_csv('排名结果.csv')
     
     
     
