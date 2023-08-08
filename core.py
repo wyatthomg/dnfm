@@ -17,12 +17,14 @@ import pandas
 import numpy as np
 import math
 import time 
+import random
 from skillmodel import Character
 
 t1 = time.time()
 excelname = 'basedb.xlsx'
 equipdb = pandas.read_excel(excelname, sheet_name='BaseDb')
 predf = pandas.read_csv('预加载.csv')
+
 def loading_equip(predf,weapon_type=['手炮','步枪']):
     resultdf = pandas.DataFrame()
     weapon_list =  set(equipdb[equipdb['套装名称'].isin(weapon_type)]['装备名称'])
@@ -32,15 +34,16 @@ def loading_equip(predf,weapon_type=['手炮','步枪']):
         resultdf = pandas.concat([resultdf,predf],ignore_index=True)
     return resultdf
                         
-        
+  ##########下面三个是用来模拟打桩用的  ######    
+  #普通套装打桩计算
 def mpt(skill_list,base_damage):
     reuslt = 0
     for key in  skill_list:
-        attack_times =math.floor( 60/ (key.skill_cd +0.4)) +1
+        attack_times =math.floor( 60/ (key.skill_cd +key.show_time)) +1
         skill_damage = attack_times*base_damage*key.final_damage
         reuslt += skill_damage
     return reuslt
-import random
+
 def zh_random(rawtime,name,use):
     finaly_time = rawtime
     if use ==1:
@@ -51,11 +54,13 @@ def zh_random(rawtime,name,use):
             else:
                 pass
     return {'finaly_time':finaly_time,'extra_time':finaly_time-rawtime,"name":name}
+
+#镇魂套打桩计算
 def zht(skill_list,extra_skill,base_damage):
     reuslt= 0
     for i in range(100):
         for key in skill_list:
-            attack_times =math.floor( 60/ (key.skill_cd +0.4)) +1
+            attack_times =math.floor( 60/ (key.skill_cd + key.show_time))) +1
             if key in extra_skill:
                 use =1
             else:
@@ -64,7 +69,7 @@ def zht(skill_list,extra_skill,base_damage):
             skill_damage = finaly_times['finaly_time']*key.final_damage*base_damage
             reuslt += skill_damage
     return reuslt/100           
-
+################
 
 def runcal(row,have_ele=1):
     Role = Character('狂暴者')
@@ -88,7 +93,7 @@ def runcal(row,have_ele=1):
     equip_elememt= 158#其他地方堆得属强
     equip_critalvalue = 700#暴击
     equip_upscale_attk = 0.22 #称号和 7黄词条
-    # skill_skill_attak = 0.12 if row['武器类型'] == eat else 0 #如果带手炮就来12技工
+
     
     #初始化一下参数
     resutl_lizhi = equip_lizhi + base_lizhi
@@ -106,7 +111,8 @@ def runcal(row,have_ele=1):
     eque_skill_attk =1
     result_extra_attk_abnormal = 0
     have_ele = have_ele
-    context =""
+    # context =""
+
     for loca in ['武器','左槽','防具三件套效果', 
                  '五件套效果' , '首饰三件套效果',  
                  '上衣',    '下装',    '护肩',
@@ -130,6 +136,8 @@ def runcal(row,have_ele=1):
         except Exception as e :
             print(eval_list,e)
             pass
+
+        
         eque_skill_attk *= (1+equip_attr['技能攻击力'])
         
         result_extra_attk += equip_attr['附加伤害']
@@ -148,7 +156,7 @@ def runcal(row,have_ele=1):
         resutl_lizhi += equip_attr['额外基础力智']
         resutl_shuanggong +=  equip_attr['额外基础物攻']
         have_ele += equip_attr['是否有属性攻击']
-        context +=loca+":"+ str(equip_attr['备注描述'])+"\n"
+        # context +=loca+":"+ str(equip_attr['备注描述'])+"\n"
         baozhu  = 0.05 if have_ele >=1 else 0 #角色自带，或者装备有属强，我就默认上一个宝珠5%
         
         
