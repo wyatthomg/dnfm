@@ -13,15 +13,10 @@ Created on Sat Jul 22 17:52:07 2023
                       ,V
                     OOb"
 """
-import pandas 
-import numpy as np
-import math
-import time 
-import random
-from skillmodel import Character
 
 class Role(object):
     def __init__(self,
+                 job,
                 strength_base,#基础力量
                 intellect_base, #基础智力
                 brawn_base,   #基础体力
@@ -43,7 +38,7 @@ class Role(object):
 
       ):
         #魔力结晶和公会的现在算作基础，脱妆抄数据就好
-        self.job = "大枪"# job类后面映射到Skill Model获取被动过和技能明细  
+        self.job = job# job类后面映射到Skill Model获取被动过和技能明细  
         #暴击系数其实要看被攻击者等级，先放
         self.strength_base = strength_base #角色力量
         self.intellect_base = intellect_base #智力
@@ -96,15 +91,120 @@ class Role(object):
         self.pushskill_speed_base = pushskill_speed_base
         self.move_speed_base = move_speed_base
 
+        self._type_dict = None
+        # wyatthomg.add_equement(Saliya)
+        self.attr_init()
+    def attr_init(self):
+      self.strengh = 0
+      self.intelligent = 0
+      self.brawn = 0
+      self.sprit = 0
+      self.phydef = 0
+      self.magicdef = 0
+      self.hp = 0
+      self.mp = 0
+      self.phyAtkPower = 0
+      self.magicAtkPower = 0
+      self.critum =0
+      self.critrate = 0
+      self.cri_damage = 0
+      self.damage_increase = 0
+      self.extra_damage = 0
+      self.skill_attk = 0
+      self.mipha_num = 0
+      self.daekel_num = 0
+      self.urbosa_num = 0
+      self.revail_num = 0
+      self.strengh_increase_rate = 0
+      self.intelligent_increase_rate = 0
+      self.brawn_increase_rate = 0
+      self.sprit_increase_rate = 0
+      self.phydef_increase_rate = 0
+      self.magicdef_increase_rate = 0
+      self.shield = 0
+      self.attack_speed = 0
+      self.pushskill_speed= 0
+      self.move_speed = 0
 
-    def add_equement(self,quement):
-        pass
+  
+      self.all_attr =[
+          "strengh",
+          "intelligent",
+          "brawn",
+          "sprit",
+          "phydef",
+          "magicdef",
+          "hp",
+          "mp",
+          "phyAtkPower",
+          "magicAtkPower",
+          "critum",
+          "critrate",
+          "cri_damage",
+          "damage_increase",
+          "extra_damage",
+          "skill_attk",
+          "mipha_num",
+          "daekel_num",
+          "urbosa_num",
+          "revail_num",
+          "strengh_increase_rate",
+          "intelligent_increase_rate",
+          "brawn_increase_rate",
+          "sprit_increase_rate",
+          "phydef_increase_rate",
+          "magicdef_increase_rate",
+          "shield",
+          "attack_speed",
+          "pushskill_speed",
+          "move_speed",
+          ]
+         
+      
+    @property
+    def equement_type(self):
+        if self._type_dict is None:
+            # 仅在首次访问时初始化字典
+            self._type_dict = {
+                "pet": None,        # 宠物
+                "red_pet": None,
+                "blue_pet": None,
+                "green_pet": None,
+                "three_pet": None,
+                "weapon": None,     # 武器
+                "top": None,        # 上衣
+                "head": None,       # 头
+                "bottom": None,     # 下装
+                "belt": None,       # 腰带
+                "under": None,      # 下装
+                "ring": None,       # 戒指
+                "necklace": None,   # 项链
+            }
+        return self._type_dict
+    def add_equement(self,equement):
+        self.equement_type[equement.eque_type] = equement
     
+    def eque_cal(self):
+        self.attr_init()
+        for equ_key in self.equement_type.keys():
+            equement = self.equement_type[equ_key]
+            for attr in self.all_attr:
+                if equement:
+                    if equement.__dict__[attr] != 0:
+                        self.__dict__[attr] += equement.__dict__[attr]
 
 
+    
+    @property
+    def info(self):
+        self.eque_cal()
+        for attr in self.all_attr:
+            print(attr,":",self.__dict__[attr])
+        
 class Base_Equement(object):
     #ABC类，不可用，懒得定义
     def __init__(self,
+                eque_name,
                 eque_type,
                 need_job ="all", #是否有职业限定，但是我可能会放弃这个的定义,
                 strengh = 0,#力量
@@ -145,7 +245,7 @@ class Base_Equement(object):
 
     ):
       #所有输入值都SELF化
-      
+      self.eque_name = eque_name
       self.need_job = need_job
       self.eque_type = eque_type
       self.strengh = strengh
@@ -180,6 +280,39 @@ class Base_Equement(object):
       self.move_speed = move_speed
 
 
+      self.all_attr =[
+          self.strengh,
+          self.intelligent,
+          self.brawn,
+          self.sprit,
+          self.phydef,
+          self.magicdef,
+          self.hp,
+          self.mp,
+          self.phyAtkPower,
+          self.magicAtkPower,
+          self.critum,
+          self.critrate,
+          self.cri_damage,
+          self.damage_increase,
+          self.extra_damage,
+          self.skill_attk,
+          self.mipha_num,
+          self.daekel_num,
+          self.urbosa_num,
+          self.revail_num,
+          self.strengh_increase_rate,
+          self.intelligent_increase_rate,
+          self.brawn_increase_rate,
+          self.sprit_increase_rate,
+          self.phydef_increase_rate,
+          self.magicdef_increase_rate,
+          self.shield,
+          self.attack_speed,
+          self.pushskill_speed,
+          self.move_speed
+      ]
+
 
     
 
@@ -187,8 +320,8 @@ class Base_Equement(object):
                                           
 class Pet_and_Equepment(Base_Equement):
     #宠物本身当做一个装备来处就好了
-    def __init__(self,eque_type,**kwargs):
-        super().__init__(eque_type,**kwargs)
+    def __init__(self,eque_name,eque_type,**kwargs):
+        super().__init__(eque_name,eque_type,**kwargs)
         
 
 if __name__ == "__main__":
@@ -211,12 +344,12 @@ if __name__ == "__main__":
                 magicdef_base  = 0, #基础魔法防御
                 attack_speed_base  = 0,
                 pushskill_speed_base  = 0,
-                move_speed_base = 0,)
-    Saliya = Pet_and_Equepment("萨莉亚",
-                                "pet",
+                move_speed_base = 0)
+    
+    saliya = Pet_and_Equepment(eque_name= "Saliya",
+                                eque_type="pet",
                                 strengh = 237,
                                 intelligent=237,
-                                brawn=237,
                                 brawn=237,
                                 sprit=237,
                                 critrate=2,
@@ -224,26 +357,26 @@ if __name__ == "__main__":
                                 daekel_num = 8, #火强
                                 urbosa_num = 8,#光强
                                 revali_num = 8,#暗强
-                                extra_damage = 21, #白字
+                                extra_damage = 21 #白字
     )
 
-    red_pet_eque = Pet_and_Equepment("红宠装备",
-                                    "red_pet",
+    red_pet_eque = Pet_and_Equepment(eque_name="红宠装备",
+                                    eque_type="red_pet",
                                       strengh = 78,
                                       intelligent=18,
                                       phyAtkPower = 11, #物理攻击力
                                       magicAtkPower = 11) #魔法攻击力
 
-    blue_pet_eque = Pet_and_Equepment("蓝宠装备",
-                                    "blue_pet",
+    blue_pet_eque = Pet_and_Equepment(eque_name="蓝宠装备",
+                                    eque_type="blue_pet",
                                       attack_speed = 5,
                                       pushskill_speed=7.5,
                                       move_speed = 2.5,
                                       phyAtkPower = 60, 
                                       ) 
 
-    green_pet_eque = Pet_and_Equepment("绿宠装备",
-                                    "green_pet",
+    green_pet_eque = Pet_and_Equepment(eque_name="绿宠装备",
+                                    eque_type="green_pet",
                                       hp = 165,
                                       mipha_num = 14, #冰强
                                       daekel_num = 14, #火强
@@ -251,8 +384,8 @@ if __name__ == "__main__":
                                       revali_num = 14,#暗强
                                       )
 
-    three_pet_eque  = Pet_and_Equepment("三宠装备",
-                                    "three_pet",
+    three_pet_eque  = Pet_and_Equepment(eque_name="三宠装备",
+                                        eque_type="three_pet",
                                       mipha_num = 5, #冰强
                                       daekel_num = 5, #火强
                                       urbosa_num = 5,#光强
@@ -263,12 +396,12 @@ if __name__ == "__main__":
                                       move_speed = 3,
                                       )
 
-    wyatthomg.add_equement(Saliya)
+    wyatthomg.add_equement(saliya)
     wyatthomg.add_equement(red_pet_eque)
     wyatthomg.add_equement(blue_pet_eque)
     wyatthomg.add_equement(green_pet_eque)
     wyatthomg.add_equement(three_pet_eque)
-    wyatthomg.info()
+    wyatthomg.info
 
 
 
