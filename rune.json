@@ -1,0 +1,58 @@
+{
+    "觉醒65": {
+        "skill_level": 65,
+        "level_1": 1,
+        "level_2": 2,
+        "level_3": 3,
+        "level_4": 4
+    },
+    "觉醒45": {
+        "skill_level": 45,
+        "level_1": 1,
+        "level_2": 2,
+        "level_3": 3,
+        "level_4": 4
+    },
+    "觉醒40": {
+        "skill_level": 40,
+        "level_1": 1,
+        "level_2": 2,
+        "level_3": 3,
+        "level_4": 4
+    },
+    "觉醒35": {
+        "skill_level": 35,
+        "level_1": 1,
+        "level_2": 2,
+        "level_3": 3,
+        "level_4": 4
+    },
+    "觉醒30": {
+        "skill_level": 30,
+        "level_1": 1,
+        "level_2": 2,
+        "level_3": 3,
+        "level_4": 4
+    },
+    "觉醒25": {
+        "skill_level": 25,
+        "level_1": 1,
+        "level_2": 2,
+        "level_3": 3,
+        "level_4": 4
+    },
+    "觉醒20": {
+        "skill_level": 20,
+        "level_1": 1,
+        "level_2": 2,
+        "level_3": 3,
+        "level_4": 4
+    },
+    "觉醒15": {
+        "skill_level": 15,
+        "level_1": 1,
+        "level_2": 2,
+        "level_3": 3,
+        "level_4": 4
+    }
+}

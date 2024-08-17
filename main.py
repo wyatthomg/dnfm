@@ -1,5 +1,5 @@
-from equement import Pet_and_Equepment
-from base import Role
+from model.equement import Pet_and_Equepment
+from model.base import Role
 from pathlib import Path
 import json
 euque_file = Path("eque.json")

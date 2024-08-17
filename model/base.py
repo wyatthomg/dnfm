@@ -13,12 +13,13 @@ Created on Sat Jul 22 17:52:07 2023
                       ,V
                     OOb"
 """
-from equement import Pet_and_Equepment
+from model.equement import Pet_and_Equepment
 
 class Role(object):
+    JOB_LIST = []
     def __init__(self,
-                 job,
-                 level,
+                job,
+                level,
                 strength_base,#基础力量
                 intellect_base, #基础智力
                 brawn_base,   #基础体力
@@ -26,10 +27,10 @@ class Role(object):
                 phyAtkPower_base, #基础物理攻击力
                 magicAtkPower_base, #基础魔法攻击力
                 critnum_base, #基础暴击数值
-                daekel_num, #基础火强
-                mipha_num, #基础冰强
-                urbosa_num, #基础光强
-                revali_num, #基础暗强
+                daekel_num_base, #基础火强
+                mipha_num_base, #基础冰强
+                urbosa_num_base, #基础光强
+                revali_num_base, #基础暗强
                 hp_base , #基础生命值
                 mp_base , #基础魔法值
                 phydef_base, #基础物理防御
@@ -50,14 +51,19 @@ class Role(object):
         self.phyAtkPower_base = phyAtkPower_base #基础物理攻击力
         self.magicAtkPower_base = magicAtkPower_base #基础魔法攻击力
         self.critnum_base = critnum_base  #基础暴击数值
-        self.daekel_num = daekel_num #火强属性值
-        self.mipha_num = mipha_num #冰强属性值
-        self.urbosa_num = urbosa_num #光强属性值
-        self.revali_num = revali_num #暗强属性值
+        self.daekel_num_base = daekel_num_base #火强属性值
+        self.mipha_num_base = mipha_num_base #冰强属性值
+        self.urbosa_num_base = urbosa_num_base #光强属性值
+        self.revali_num_base = revali_num_base #暗强属性值
         self.hp_base = hp_base#基础生命值
         self.mp_base = mp_base #基础魔法值
         self.phydef_base = phydef_base #基础物理防御
         self.magicdef_base = magicdef_base #
+        
+        #三速
+        self.attack_speed_base = attack_speed_base
+        self.pushskill_speed_base = pushskill_speed_base
+        self.move_speed_base = move_speed_base
 
         #伤害计算基本定义
         self.damage_increase = 1
@@ -89,35 +95,33 @@ class Role(object):
         self.weapon = None
         self.stone = None
 
-        #三速
-        self.attack_speed_base = attack_speed_base
-        self.pushskill_speed_base = pushskill_speed_base
-        self.move_speed_base = move_speed_base
-
         self._type_dict = None
         # wyatthomg.add_equement(Saliya)
         self.attr_init()
     def attr_init(self):
-      self.strengh = 0
-      self.intelligent = 0
-      self.brawn = 0
-      self.sprit = 0
+      self.strengh = self.strength_base
+      self.intelligent = self.intellect_base
+      self.brawn = self.brawn_base
+      self.sprit = self.sprit_base
       self.phydef = 0
       self.magicdef = 0
       self.hp = 0
       self.mp = 0
       self.phyAtkPower = self.phyAtkPower_base
-      self.magicAtkPower = 0
-      self.critum =0
-      self.critrate = 0
-      self.cri_damage = 0
+      self.magicAtkPower = self.magicAtkPower_base
+      self.critum = self.critnum_base
+      self.critrate = 3
+      self.cri_damage = 50
+
       self.damage_increase = 0
       self.extra_damage = 0
       self.skill_attk = 0
-      self.mipha_num = 0
-      self.daekel_num = 0
-      self.urbosa_num = 0
-      self.revail_num = 0
+
+      self.mipha_num = self.mipha_num_base
+      self.daekel_num = self.daekel_num_base 
+      self.urbosa_num = self.urbosa_num_base
+      self.revail_num = self.revali_num_base 
+
       self.strengh_increase_rate = 0
       self.intelligent_increase_rate = 0
       self.brawn_increase_rate = 0
@@ -125,9 +129,10 @@ class Role(object):
       self.phyatk_increase_rate = 0
       self.magicatk_increase_rate = 0
       self.shield = 0
-      self.attack_speed = 0
-      self.pushskill_speed= 0
-      self.move_speed = 0
+
+      self.attack_speed = self.attack_speed_base
+      self.pushskill_speed= self.pushskill_speed_base
+      self.move_speed = self.move_speed_base 
       self.element_extra_damage = 0    
   
       self.all_attr_str =[
@@ -236,82 +241,5 @@ class Role(object):
 
 if __name__ == "__main__":
     #测试
-    wyatthomg = Role("大枪",    
-                strength_base = 0, #基础力量
-                intellect_base = 0 , #基础智力
-                brawn_base = 0 ,   #基础体力
-                spirit_base  = 0, #基础精神
-                phyAtkPower_base  = 0, #基础物理攻击力
-                magicAtkPower_base  = 0, #基础魔法攻击力
-                critnum_base  = 0, #基础暴击数值
-                daekel_num  = 0, #基础火强
-                mipha_num = 0, #基础冰强
-                urbosa_num  = 0, #基础光强
-                revali_num  = 0, #基础暗强
-                hp_base  = 0, #基础生命值
-                mp_base  = 0, #基础魔法值
-                phydef_base  = 0, #基础物理防御
-                magicdef_base  = 0, #基础魔法防御
-                attack_speed_base  = 0,
-                pushskill_speed_base  = 0,
-                move_speed_base = 0)
-    
-    saliya = Pet_and_Equepment(eque_name= "Saliya",
-                                eque_type="pet",
-                                strengh = 237,
-                                intelligent=237,
-                                brawn=237,
-                                sprit=237,
-                                critrate=2,
-                                mipha_num = 8, #冰强
-                                daekel_num = 8, #火强
-                                urbosa_num = 8,#光强
-                                revali_num = 8,#暗强
-                                extra_damage = 21 #白字
-    )
-
-    red_pet_eque = Pet_and_Equepment(eque_name="红宠装备",
-                                    eque_type="red_pet",
-                                      strengh = 78,
-                                      intelligent=18,
-                                      phyAtkPower = 11, #物理攻击力
-                                      magicAtkPower = 11) #魔法攻击力
-
-    blue_pet_eque = Pet_and_Equepment(eque_name="蓝宠装备",
-                                    eque_type="blue_pet",
-                                      attack_speed = 5,
-                                      pushskill_speed=7.5,
-                                      move_speed = 2.5,
-                                      phyAtkPower = 60, 
-                                      ) 
-
-    green_pet_eque = Pet_and_Equepment(eque_name="绿宠装备",
-                                    eque_type="green_pet",
-                                      hp = 165,
-                                      mipha_num = 14, #冰强
-                                      daekel_num = 14, #火强
-                                      urbosa_num = 14,#光强
-                                      revali_num = 14,#暗强
-                                      )
-
-    three_pet_eque  = Pet_and_Equepment(eque_name="三宠装备",
-                                        eque_type="three_pet",
-                                      mipha_num = 5, #冰强
-                                      daekel_num = 5, #火强
-                                      urbosa_num = 5,#光强
-                                      revali_num = 5,#暗强
-                                      extra_damage = 3, #白字
-                                      attack_speed = 3,
-                                      pushskill_speed=3,
-                                      move_speed = 3,
-                                      )
-
-    wyatthomg.add_equement(saliya)
-    wyatthomg.add_equement(red_pet_eque)
-    wyatthomg.add_equement(blue_pet_eque)
-    wyatthomg.add_equement(green_pet_eque)
-    wyatthomg.add_equement(three_pet_eque)
-    wyatthomg.info
-
-
-
+    pass
+ 
