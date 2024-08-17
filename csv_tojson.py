@@ -2,7 +2,7 @@ import pandas as pd
 import json
 from pathlib import Path
 import numpy as np
-equedb_file = Path(r"E:\python\dnfm\v2\equedb.csv")
+equedb_file = Path("equedb.csv")
 eque_df = pd.read_csv(equedb_file)
 # eque_df.to_json("equedb.json", orient="records", force_ascii=False, lines=True)
 # eque_dfs=1

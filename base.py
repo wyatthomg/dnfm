@@ -18,6 +18,7 @@ from equement import Pet_and_Equepment
 class Role(object):
     def __init__(self,
                  job,
+                 level,
                 strength_base,#基础力量
                 intellect_base, #基础智力
                 brawn_base,   #基础体力
@@ -41,6 +42,7 @@ class Role(object):
         #魔力结晶和公会的现在算作基础，脱妆抄数据就好
         self.job = job# job类后面映射到Skill Model获取被动过和技能明细  
         #暴击系数其实要看被攻击者等级，先放
+        self.level = level
         self.strength_base = strength_base #角色力量
         self.intellect_base = intellect_base #智力
         self.brawn_base = brawn_base #体力
@@ -60,7 +62,7 @@ class Role(object):
         #伤害计算基本定义
         self.damage_increase = 1
         self.extra_damage = 1
-        self.crit_damage_rate = 5 #暴击增伤比例
+        self.crit_damage_rate = 50 #暴击增伤比例
         self.critrate = 3 #基础暴击率
         self.skill_attk = 0
 
@@ -104,7 +106,7 @@ class Role(object):
       self.magicdef = 0
       self.hp = 0
       self.mp = 0
-      self.phyAtkPower = 0
+      self.phyAtkPower = self.phyAtkPower_base
       self.magicAtkPower = 0
       self.critum =0
       self.critrate = 0
@@ -206,6 +208,30 @@ class Role(object):
         for attr in self.all_attr_str:
             print(attr,":",self.__dict__[attr])
         
+    def pannel_value(self):
+        self.pannel_strengh = self.strengh * (1 + self.strengh_increase_rate* 0.01) #最终力量
+        self.pannel_intelligent = self.intelligent * (1 + self.intelligent_increase_rate * 0.01) #最终智力
+        self.pannel_brawn = self.brawn #体力
+        self.pannel_sprit = self.sprit #精神
+        self.pannel_phyATK = self.phyAtkPower * (1 + self.phyatk_increase_rate * 0.01) * (self.pannel_strengh * 0.004 + 1)
+        self.pannel_magicATK = self.magicAtkPower * (1 + self.magicatk_increase_rate * 0.01) * (self.pannel_intelligent *0.004 + 1)
+        self.pannel_phydef= self.phydef + self.pannel_brawn * 5
+        self.pannel_magicdef= self.magicdef + self.pannel_sprit * 5
+        self.pannel_hp = self.hp * (1+ self.pannel_brawn * 0.004)
+        self.pannel_mp = self.mp * (1+ self.pannel_sprit * 0.004)
+       
+         
+
+    def attack(self,otherRole):
+         self.pannel_value()
+         crit_unit = 3.75*1.25**(round(otherRole.level/8,2))
+         self.pannel_critrate = self.critrate + (self.critum + self.critnum_base) /crit_unit
+         damage = self.pannel_phyATK *  (1 + self.damage_increase * 0.01) * \
+                                        (1 + self.extra_damage * 0.01+ (self.element_extra_damage * 0.01 * (1.05 + self.mipha_num/220))) * \
+                                        ((1 + self.cri_damage * 0.01) * min(100,self.pannel_critrate)/100 + (1 -  min(100,self.pannel_critrate)/100 )) *\
+                                        (1.05 + self.mipha_num/220)
+         
+         return damage 
 
 
 if __name__ == "__main__":
