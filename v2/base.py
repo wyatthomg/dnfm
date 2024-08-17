@@ -13,6 +13,7 @@ Created on Sat Jul 22 17:52:07 2023
                       ,V
                     OOb"
 """
+from equement import Pet_and_Equepment
 
 class Role(object):
     def __init__(self,
@@ -58,9 +59,9 @@ class Role(object):
 
         #伤害计算基本定义
         self.damage_increase = 1
-        self.extra_damage = 0
-        self.crit_damage_rate = 0.5 #暴击增伤比例
-        self.critrate = 0.03 #基础暴击率
+        self.extra_damage = 1
+        self.crit_damage_rate = 5 #暴击增伤比例
+        self.critrate = 3 #基础暴击率
         self.skill_attk = 0
 
         ##其他的基本obj,先空出来
@@ -119,15 +120,15 @@ class Role(object):
       self.intelligent_increase_rate = 0
       self.brawn_increase_rate = 0
       self.sprit_increase_rate = 0
-      self.phydef_increase_rate = 0
-      self.magicdef_increase_rate = 0
+      self.phyatk_increase_rate = 0
+      self.magicatk_increase_rate = 0
       self.shield = 0
       self.attack_speed = 0
       self.pushskill_speed= 0
       self.move_speed = 0
-
+      self.element_extra_damage = 0    
   
-      self.all_attr =[
+      self.all_attr_str =[
           "strengh",
           "intelligent",
           "brawn",
@@ -150,14 +151,13 @@ class Role(object):
           "revail_num",
           "strengh_increase_rate",
           "intelligent_increase_rate",
-          "brawn_increase_rate",
-          "sprit_increase_rate",
-          "phydef_increase_rate",
-          "magicdef_increase_rate",
+          "phyatk_increase_rate",
+          "magicatk_increase_rate",
           "shield",
           "attack_speed",
           "pushskill_speed",
           "move_speed",
+          "element_extra_damage"
           ]
          
       
@@ -170,15 +170,20 @@ class Role(object):
                 "red_pet": None,
                 "blue_pet": None,
                 "green_pet": None,
-                "three_pet": None,
                 "weapon": None,     # 武器
                 "top": None,        # 上衣
                 "head": None,       # 头
                 "bottom": None,     # 下装
                 "belt": None,       # 腰带
+                "shoe":None,
                 "under": None,      # 下装
                 "ring": None,       # 戒指
                 "necklace": None,   # 项链
+                #套装效果暂时独立出来，后面合并到装备里面，用Eque_group的方式管理
+                "three_pet": None,#宠物套装
+                "two_left": None, #防具两件套效果
+                "three_right":None,#首饰3件套效果
+                "five_left":None #防具五件套效果
             }
         return self._type_dict
     def add_equement(self,equement):
@@ -188,7 +193,7 @@ class Role(object):
         self.attr_init()
         for equ_key in self.equement_type.keys():
             equement = self.equement_type[equ_key]
-            for attr in self.all_attr:
+            for attr in self.all_attr_str:
                 if equement:
                     if equement.__dict__[attr] != 0:
                         self.__dict__[attr] += equement.__dict__[attr]
@@ -198,131 +203,10 @@ class Role(object):
     @property
     def info(self):
         self.eque_cal()
-        for attr in self.all_attr:
+        for attr in self.all_attr_str:
             print(attr,":",self.__dict__[attr])
         
-class Base_Equement(object):
-    #ABC类，不可用，懒得定义
-    def __init__(self,
-                eque_name,
-                eque_type,
-                need_job ="all", #是否有职业限定，但是我可能会放弃这个的定义,
-                strengh = 0,#力量
-                intelligent =  0 ,#智力
-                brawn = 0 ,#  体力
-                sprit = 0,# 精神
-                phydef = 0, #物理防御
-                magicdef = 0, #魔法防御
-                hp = 0, #生命值
-                mp = 0, #魔法值
 
-                phyAtkPower = 0, #物理攻击力
-                magicAtkPower = 0, #魔法攻击力
-                critnum = 0, #暴击数值
-                critrate = 0, #直接暴击率
-                cri_damage = 0, #暴击伤害
-                damage_increase = 0, #黄字
-                extra_damage = 0, #白字
-                skill_attk = 0, #技攻
-
-                mipha_num = 0, #冰强
-                daekel_num = 0, #火强
-                urbosa_num = 0,#光强
-                revali_num = 0,#暗强
-
-
-                strengh_increase_rate = 0 ,#力量加成系数
-                intelligent_increase_rate = 0, #智力加成系数
-                brawn_increase_rate = 0, #体力加成系数
-                sprit_increase_rate = 0, #精神加成系数
-                phydef_increase_rate = 0, #物理防御加成系数
-                magicdef_increase_rate = 0, #魔法防御加成系数
-
-                shield = 0,#护盾
-                attack_speed = 0,
-                pushskill_speed =0 ,
-                move_speed =0 
-
-    ):
-      #所有输入值都SELF化
-      self.eque_name = eque_name
-      self.need_job = need_job
-      self.eque_type = eque_type
-      self.strengh = strengh
-      self.intelligent = intelligent
-      self.brawn = brawn
-      self.sprit = sprit
-      self.phydef = phydef
-      self.magicdef = magicdef
-      self.hp = hp
-      self.mp = mp
-      self.phyAtkPower = phyAtkPower
-      self.magicAtkPower = magicAtkPower
-      self.critum =critnum
-      self.critrate = critrate
-      self.cri_damage = cri_damage
-      self.damage_increase = damage_increase
-      self.extra_damage = extra_damage
-      self.skill_attk = skill_attk
-      self.mipha_num = mipha_num
-      self.daekel_num = daekel_num
-      self.urbosa_num = urbosa_num
-      self.revail_num = revali_num
-      self.strengh_increase_rate = strengh_increase_rate
-      self.intelligent_increase_rate = intelligent_increase_rate
-      self.brawn_increase_rate = brawn_increase_rate
-      self.sprit_increase_rate = sprit_increase_rate
-      self.phydef_increase_rate = phydef_increase_rate
-      self.magicdef_increase_rate = magicdef_increase_rate
-      self.shield = shield
-      self.attack_speed = attack_speed
-      self.pushskill_speed= pushskill_speed
-      self.move_speed = move_speed
-
-
-      self.all_attr =[
-          self.strengh,
-          self.intelligent,
-          self.brawn,
-          self.sprit,
-          self.phydef,
-          self.magicdef,
-          self.hp,
-          self.mp,
-          self.phyAtkPower,
-          self.magicAtkPower,
-          self.critum,
-          self.critrate,
-          self.cri_damage,
-          self.damage_increase,
-          self.extra_damage,
-          self.skill_attk,
-          self.mipha_num,
-          self.daekel_num,
-          self.urbosa_num,
-          self.revail_num,
-          self.strengh_increase_rate,
-          self.intelligent_increase_rate,
-          self.brawn_increase_rate,
-          self.sprit_increase_rate,
-          self.phydef_increase_rate,
-          self.magicdef_increase_rate,
-          self.shield,
-          self.attack_speed,
-          self.pushskill_speed,
-          self.move_speed
-      ]
-
-
-    
-
-
-                                          
-class Pet_and_Equepment(Base_Equement):
-    #宠物本身当做一个装备来处就好了
-    def __init__(self,eque_name,eque_type,**kwargs):
-        super().__init__(eque_name,eque_type,**kwargs)
-        
 
 if __name__ == "__main__":
     #测试
